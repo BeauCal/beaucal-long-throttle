@@ -26,9 +26,9 @@ Either you get the lock or you don't.
 // in controller
 $throttle = $this->getServiceLocator()->get('BeaucalLongThrottle\Throttle');
 if ($throttle->takeLock('MonthlyMailingUser12345', new DateTimeUnit(1, 'month'))) {
-    // mail it out & lock is in place for another month
+    // mail it out & lock is made for another month
 }
 else {
-    // locked from before, must skip & try again later
+    // locked from before: leave it alone & perhaps try again later
 }
 ```
