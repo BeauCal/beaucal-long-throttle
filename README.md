@@ -20,6 +20,8 @@ CREATE TABLE IF NOT EXISTS `beaucal_throttle` (
 
 ### To Use
 
+Either you get the lock or you don't.
+
 ```PHP
 // in controller
 $throttle = $this->getServiceLocator()->get('BeaucalLongThrottle\Throttle');
