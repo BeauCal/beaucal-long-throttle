@@ -31,4 +31,9 @@ if ($throttle->takeLock('MonthlyMailingUser12345', new DateTimeUnit(2, 'weeks'))
 else {
     // locked from before: leave it alone & perhaps try again later
 }
+
+/**
+ * N.B. May throw \BeaucalLongThrottle\Exception\SetLockException, when
+ * lock is reported to be set but upon verification step is actually not.
+ */
 ```
