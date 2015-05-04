@@ -4,6 +4,7 @@ namespace BeaucalLongThrottleTest\Factory;
 
 use Zend\Db\Adapter\Adapter as ZendDbAdapter;
 use Zend\ServiceManager\ServiceManager;
+use Zend\ServiceManager\Config as ServiceManagerConfig;
 
 /**
  * @group beaucal_throttle
@@ -21,12 +22,10 @@ class FactoryTest extends \PHPUnit_Framework_TestCase {
 
     public function setUp() {
         parent::setUp();
-
-        $this->serviceManager = new ServiceManager;
-        $factories = require __DIR__ . '/../../../config/module.config.php';
-        foreach ($factories['service_manager']['factories'] as $key => $factory) {
-            $this->serviceManager->setFactory($key, $factory);
-        }
+        $config = include __DIR__ . '/../../../config/module.config.php';
+        $this->serviceManager = new ServiceManager(
+        new ServiceManagerConfig($config['service_manager'])
+        );
 
         $this->serviceManager->setFactory('Zend\Db\Adapter\Adapter',
         function($sm) {
@@ -73,6 +72,13 @@ class FactoryTest extends \PHPUnit_Framework_TestCase {
         $class = 'BeaucalLongThrottle\Service\Throttle';
         $options = $this->serviceManager->get($class);
         $this->assertInstanceOf($class, $options);
+
+        /**
+         * Alias.
+         */
+        $this->assertSame(
+        $options, $this->serviceManager->get('BeaucalLongThrottle')
+        );
     }
 
     public function testDbAdapterFactory() {
