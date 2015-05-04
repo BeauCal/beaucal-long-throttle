@@ -1,0 +1,25 @@
+{
+    "name": "beaucal/beaucal-long-throttle",
+    "description": "Prevent an action for some long amount of time. Hours, day, months, years.",
+    "license": "MIT",
+    "keywords": [
+        "zf2", "throttle"
+    ],
+    "homepage": "https://github.com/BeauCal/beaucal-long-throttle",
+    "authors": [
+        {
+            "name": "Derek Illchuk",
+            "email": "derek@beaucal.com",
+            "homepage": "https://www.beaucal.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4",
+        "zendframework/zend-db" : "~2.1"
+    },
+    "autoload": {
+        "classmap": [
+            "./Module.php"
+        ]
+    }
+}
