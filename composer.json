@@ -18,7 +18,7 @@
         "zendframework/zend-db" : "~2.1"
     },
     "autoload": {
-	    "psr-0": {
+        "psr-0": {
             "BeaucalLongThrottle": "src/"
         },
         "classmap": [
