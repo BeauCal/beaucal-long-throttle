@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS `beaucal_throttle` (
   `key` varchar(255) NOT NULL UNIQUE KEY,
   `end_datetime` DATETIME NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ALTER TABLE `beaucal_throttle` ADD INDEX (`end_datetime`);
 ```
 
 
