@@ -144,4 +144,20 @@ class ThrottleTest extends \PHPUnit_Extensions_Database_TestCase {
         $throttle->takeLock('phantom', new DateTimeUnit(10, 'years'));
     }
 
+    public function testSetLockReturnsFalse() {
+        $adapterMock = $this->getMock(
+        'BeaucalLongThrottle\Adapter\Db', ['setLock'],
+        [$this->gateway, $this->throttleDbAdapter->getOptions()]
+        );
+        $adapterMock->expects($this->any())
+        ->method('setLock')->will($this->returnValue(false));
+
+        $throttle = new Throttle(
+        $adapterMock, new ThrottleOptions
+        );
+        $this->assertFalse($throttle->takeLock(
+        'setLockReturnsFalse', new DateTimeUnit(3, 'minutes'))
+        );
+    }
+
 }

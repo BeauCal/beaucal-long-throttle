@@ -54,10 +54,11 @@ class Throttle {
              */
             $result = $this->adapter->setLock($key, $term->getEndDate());
 
-            if ($this->options->getVerifyLock() && !$this->adapter->verifyLock($key)) {
-                throw new PhantomLockException;
-            }
             if ($result) {
+                if ($this->options->getVerifyLock() && !$this->adapter->verifyLock($key)) {
+                    throw new PhantomLockException;
+                }
+
                 $this->adapter->commit();
                 return true;
             }
