@@ -1,6 +1,6 @@
 <?php
 
-namespace BeaucalLongThrottle;
+namespace BeaucalLongThrottle\Service;
 
 use BeaucalLongThrottle\Term\AbstractTerm;
 use BeaucalLongThrottle\Adapter\AdapterInterface as ThrottleAdapterInterface;

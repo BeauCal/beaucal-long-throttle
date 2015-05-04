@@ -2,7 +2,7 @@
 
 namespace BeaucalLongThrottle\Factory;
 
-use BeaucalLongThrottle\Throttle;
+use BeaucalLongThrottle\Service\Throttle;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\FactoryInterface;
 
