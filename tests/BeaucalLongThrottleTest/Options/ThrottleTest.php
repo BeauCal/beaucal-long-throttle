@@ -41,4 +41,11 @@ class ThrottleTest extends \PHPUnit_Framework_TestCase {
         }
     }
 
+    public function testConfigOverrides() {
+        $config = require __DIR__ . '/data/beaucallongthrottle.local.php';
+        $options = new ThrottleOptions($config['beaucallongthrottle']['throttle']);
+        $this->assertEquals('adapter_class_another', $options->getAdapterClass());
+        $this->assertEquals('verify_lock_another', $options->getVerifyLock());
+    }
+
 }

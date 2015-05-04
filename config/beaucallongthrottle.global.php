@@ -16,7 +16,7 @@ $dbAdapter = [
 return [
     'beaucallongthrottle' => [
         'throttle' => [
-//            'adapter' => 'BeaucalLongThrottle\Adapter\Db',
+//            'adapter_class' => 'BeaucalLongThrottle\Adapter\Db',
 //
 //            After setting a lock, verify its existence.
 //            'verify_lock' => true,

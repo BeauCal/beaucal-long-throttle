@@ -47,4 +47,22 @@ class DbAdapterTest extends \PHPUnit_Framework_TestCase {
         }
     }
 
+    public function testConfigOverrides() {
+        $config = require __DIR__ . '/data/beaucallongthrottle.local.php';
+        $options = new DbAdapterOptions($config['beaucallongthrottle']['BeaucalLongThrottle\Adapter\Db']);
+        $this->assertEquals(
+        'use_transactions_another', $options->getUseTransactions()
+        );
+        $this->assertEquals(
+        'db_adapter_class_another', $options->getDbAdapterClass()
+        );
+        $this->assertEquals('db_table_another', $options->getDbTable());
+        $this->assertEquals(
+        'db_date_time_format_another', $options->getDbDateTimeFormat()
+        );
+        $this->assertEquals(
+        'clear_all_is_cheap_another', $options->getClearAllIsCheap()
+        );
+    }
+
 }
