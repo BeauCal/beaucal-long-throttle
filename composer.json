@@ -15,7 +15,8 @@
     ],
     "require": {
         "php": ">=5.4",
-        "zendframework/zend-db" : "~2.1"
+        "zendframework/zend-db" : "~2.1",
+        "zendframework/zend-servicemanager" : "~2.1"
     },
     "require-dev": {
         "phpunit": "~4.0"

@@ -33,12 +33,7 @@ class DateTimeUnit extends AbstractTerm {
      * @return DateTime
      */
     protected function getEndDateInternal() {
-        $now = new DateTime;
-        $result = new DateTime("+{$this->term} {$this->modifyUnit}");
-        if ($result <= $now) {
-            throw new RuntimeException('end date was not in the future');
-        }
-        return $result;
+        return new DateTime("+{$this->term} {$this->modifyUnit}");
     }
 
 }

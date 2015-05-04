@@ -1,0 +1,6 @@
+<?xml version="1.0" ?>
+<dataset>
+    <beaucal_throttle key="forever" end_datetime="3000-01-01" />
+    <beaucal_throttle key="past" end_datetime="2000-01-01" />
+    <beaucal_throttle key="past2" end_datetime="2000-01-01" />
+</dataset>
