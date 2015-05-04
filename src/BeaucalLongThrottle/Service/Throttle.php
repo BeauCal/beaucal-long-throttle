@@ -4,7 +4,7 @@ namespace BeaucalLongThrottle\Service;
 
 use BeaucalLongThrottle\Term\AbstractTerm;
 use BeaucalLongThrottle\Adapter\AdapterInterface as ThrottleAdapterInterface;
-use BeaucalLongThrottle\Exception\SetLockException;
+use BeaucalLongThrottle\Exception\PhantomLockException;
 use Zend\Stdlib\AbstractOptions;
 
 class Throttle {
@@ -38,7 +38,7 @@ class Throttle {
      *
      * @param string $key
      * @param AbstractTerm $term
-     * @throws SetLockException
+     * @throws PhantomLockException
      * @return boolean
      */
     public function takeLock($key, AbstractTerm $term) {
@@ -55,13 +55,13 @@ class Throttle {
             $result = $this->adapter->setLock($key, $term->getEndDate());
 
             if ($this->options->getVerifyLock() && !$this->adapter->verifyLock($key)) {
-                throw new SetLockException;
+                throw new PhantomLockException;
             }
             if ($result) {
                 $this->adapter->commit();
                 return true;
             }
-        } catch (SetLockException $e) {
+        } catch (PhantomLockException $e) {
             /**
              * Lock-setting reported success but actually failed;
              * this is VERY BAD and needs to be addressed by sysadmin.

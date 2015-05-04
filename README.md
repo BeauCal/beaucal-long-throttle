@@ -33,7 +33,7 @@ else {
 }
 
 /**
- * N.B. May throw \BeaucalLongThrottle\Exception\SetLockException, when
+ * N.B. May throw \BeaucalLongThrottle\Exception\PhantomLockException, when
  * lock is reported to be set but upon verification step is actually not.
  * This is truly exceptional and shouldn't be just thrown aside.
  */

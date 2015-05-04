@@ -3,9 +3,9 @@
 namespace BeaucalLongThrottle\Exception;
 
 /**
- * When 'verifyLock' option is on and setLock() fails,
+ * When setLock reports success but actually failed,
  * this will be thrown to client since THIS IS A VERY BAD THING.
  */
-class SetLockException extends \Exception {
+class PhantomLockException extends \Exception {
 
 }
