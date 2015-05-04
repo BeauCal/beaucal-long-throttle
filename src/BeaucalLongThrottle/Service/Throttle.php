@@ -45,7 +45,9 @@ class Throttle {
         $this->adapter->beginTransaction();
 
         try {
-            $this->adapter->clearExpiredLock($key);
+            $clearKey = $this->adapter->getOptions()->getClearAllIsCheap() ?
+            null : $key;
+            $this->adapter->clearExpiredLock($clearKey);
 
             /**
              * Failure may very well throw exceptions.
@@ -74,6 +76,10 @@ class Throttle {
 
         $this->adapter->rollback();
         return false;
+    }
+
+    public function clearExpiredLocks() {
+        $this->adapter->clearExpiredLock();
     }
 
 }

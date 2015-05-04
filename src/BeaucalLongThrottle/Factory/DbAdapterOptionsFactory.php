@@ -11,7 +11,7 @@ class DbAdapterOptionsFactory implements FactoryInterface {
     public function createService(ServiceLocatorInterface $serviceLocator) {
         $config = $serviceLocator->get('Config');
         $key1 = 'beaucallongthrottle';
-        $key2 = 'BeaucalLongThrottle\Options\Db';
+        $key2 = 'BeaucalLongThrottle\Adapter\Db';
         return new DbAdapterOptions(
         isset($config[$key1][$key2]) ? $config[$key1][$key2] : []
         );

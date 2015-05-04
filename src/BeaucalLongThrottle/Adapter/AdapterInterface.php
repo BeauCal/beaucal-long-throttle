@@ -13,9 +13,9 @@ interface AdapterInterface {
     public function rollback();
 
     /**
-     * @param string $key
+     * @param string [$key]  specific key, or null to clear all
      */
-    public function clearExpiredLock($key);
+    public function clearExpiredLock($key = null);
 
     /**
      * @param string $key

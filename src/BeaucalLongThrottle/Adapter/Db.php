@@ -50,11 +50,13 @@ class Db implements ThrottleAdapterInterface {
     /**
      * @param string $key
      */
-    public function clearExpiredLock($key) {
+    public function clearExpiredLock($key = null) {
         $currDate = date($this->options->getDbDateTimeFormat());
         $delete = $this->gateway->getSql()->delete();
-        $delete->where->equalTo('key', $key)
-        ->and->lessThanOrEqualTo('end_datetime', $currDate);
+        $pred = $delete->where->lessThanOrEqualTo('end_datetime', $currDate);
+        if ($key) {
+            $pred = $pred->and->equalTo('key', $key);
+        }
         $this->gateway->deleteWith($delete);
     }
 

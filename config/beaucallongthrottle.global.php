@@ -8,6 +8,9 @@ $dbAdapter = [
 //    'db_adapter_class' => 'Zend\Db\Adapter\Adapter',
 //    'db_table' => 'beaucal_throttle',
 //    'db_date_time_format' => 'Y-m-d H:i:s'
+//
+//    When clearing all expired locks is cheap, do it with every lock-set
+//    'clear_all_is_cheap' => true
 ];
 
 return [
