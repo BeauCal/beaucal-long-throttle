@@ -27,7 +27,7 @@ Either you get the lock or you don't.
 // in controller
 $throttle = $this->getServiceLocator()->get('BeaucalLongThrottle');
 if ($throttle->takeLock('BiWeeklyReport', new DateTimeUnit(2, 'weeks'))) {
-    // lock is made for 2 weeks: safe to do your work
+    // lock is taken atomically, made for 2 weeks: safe to do your work
 }
 else {
     // locked from before: leave it alone & perhaps try again later
