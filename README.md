@@ -26,7 +26,12 @@ Either you get the lock or you don't.
 ```PHP
 // in controller
 $throttle = $this->getServiceLocator()->get('BeaucalLongThrottle');
-if ($throttle->takeLock('BiWeeklyReport', new DateTimeUnit(2, 'weeks'))) {
+
+// term?
+$term = new DateTimeUnit(2, 'weeks'); // or
+$term = new DateTimeEnd(new DateTime('+2 weeks'));
+
+if ($throttle->takeLock('BiWeeklyReport', $term)) {
     // lock is taken atomically, made for 2 weeks: safe to do your work
 }
 else {
