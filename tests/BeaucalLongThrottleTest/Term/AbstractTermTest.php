@@ -26,12 +26,4 @@ class AbstractTermTest extends \PHPUnit_Framework_TestCase {
         $termMock->getEndDate();
     }
 
-    /**
-     * @expectedException BeaucalLongThrottle\Exception\RuntimeException
-     * @expectedExceptionMessage term must be positive
-     */
-    public function testTermNonPositive() {
-        new DateTimeUnit(0, 'month');
-    }
-
 }

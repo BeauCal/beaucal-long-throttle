@@ -8,25 +8,9 @@ use DateTime;
 abstract class AbstractTerm {
 
     /**
-     * @var int
-     */
-    protected $term;
-
-    /**
      * @return DateTime
      */
     protected abstract function getEndDateInternal();
-
-    /**
-     * @param int $term
-     */
-    public function __construct($term) {
-        $term = (int) $term;
-        if ($term < 1) {
-            throw new RuntimeException('term must be positive');
-        }
-        $this->term = $term;
-    }
 
     /**
      * @return DateTime
