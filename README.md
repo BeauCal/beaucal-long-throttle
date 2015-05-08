@@ -46,8 +46,8 @@ else {
 ```
 
 
-### Allow More Than One Lock
-You can allow any number of locks e.g. 5/hour, 100/day.  Here's how:
+### Allow Multiple Locks
+You can allow any number of locks e.g. 'lock1' => 5/hour, 'lock2' => 100/day.  Here's how:
 
 ```PHP
 // in beaucallongthrottle.global.php
@@ -65,6 +65,7 @@ $regexCounts = [
 ];
 
 // in controller
+$throttle->takeLock('do-stuff', new DateTimeUnit(1, 'day')); // TRUE
 $throttle->takeLock('do-stuff', new DateTimeUnit(1, 'day')); // TRUE
 $throttle->takeLock('do-stuff', new DateTimeUnit(1, 'day')); // TRUE
 $throttle->takeLock('do-stuff', new DateTimeUnit(1, 'day')); // FALSE
