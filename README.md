@@ -61,7 +61,7 @@ $regexCounts = [
      * E.g. You can create 3 'do-stuff' locks before the lock can't be taken.
      * Those not matching here are allowed the usual 1.
      */
-    '/^do-stuff+$/' => 2
+    '/^do-stuff$/' => 2
 ];
 
 // in controller
