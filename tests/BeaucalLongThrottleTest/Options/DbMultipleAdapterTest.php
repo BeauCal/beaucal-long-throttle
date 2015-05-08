@@ -2,22 +2,22 @@
 
 namespace BeaucalLongThrottleTest\Options;
 
-use BeaucalLongThrottle\Options\DbAdapter as DbAdapterOptions;
+use BeaucalLongThrottle\Options\DbMultipleAdapter as DbMultipleAdapterOptions;
 
 /**
  * @group beaucal_throttle
  */
-class DbAdapterTest extends \PHPUnit_Framework_TestCase {
+class DbMultipleAdapterTest extends \PHPUnit_Framework_TestCase {
 
     /**
-     * @var DbAdapterOptions
+     * @var DbMultipleAdapterOptions
      */
     protected $options;
 
     public function setUp() {
         parent::setUp();
 
-        $this->options = new DbAdapterOptions;
+        $this->options = new DbMultipleAdapterOptions;
     }
 
     public function testDefaults() {
@@ -27,6 +27,7 @@ class DbAdapterTest extends \PHPUnit_Framework_TestCase {
             'db_date_time_format' => 'Y-m-d H:i:s',
             'db_table' => 'beaucal_throttle',
             'clear_all_is_cheap' => true,
+            'regex_counts' => []
         ];
         foreach ($defaults as $property => $expected) {
             $this->assertEquals($expected, $this->options->{$property});
@@ -40,6 +41,7 @@ class DbAdapterTest extends \PHPUnit_Framework_TestCase {
             'db_date_time_format' => 'another',
             'db_table' => 'another',
             'clear_all_is_cheap' => false,
+            'regex_counts' => ['another' => 10]
         ];
         foreach ($overrides as $property => $override) {
             $this->options->{$property} = $override;
@@ -49,9 +51,9 @@ class DbAdapterTest extends \PHPUnit_Framework_TestCase {
 
     public function testConfigOverrides() {
         $config = require __DIR__ . '/data/beaucallongthrottle.local.php';
-        $config = $config['beaucallongthrottle']['BeaucalLongThrottle\Adapter\Db'];
+        $config = $config['beaucallongthrottle']['BeaucalLongThrottle\Adapter\DbMultiple'];
         unset($config['options_class']);
-        $options = new DbAdapterOptions($config);
+        $options = new DbMultipleAdapterOptions($config);
         $this->assertEquals(
         'use_transactions_another', $options->getUseTransactions()
         );
@@ -64,6 +66,9 @@ class DbAdapterTest extends \PHPUnit_Framework_TestCase {
         );
         $this->assertEquals(
         'clear_all_is_cheap_another', $options->getClearAllIsCheap()
+        );
+        $this->assertEquals(
+        ['regex_counts_another' => 99], $options->getRegexCounts()
         );
     }
 

@@ -13,7 +13,7 @@ use BeaucalLongThrottle\Options\Throttle as ThrottleOptions;
 /**
  * @group beaucal_throttle
  */
-class ThrottleTest extends \PHPUnit_Extensions_Database_TestCase {
+class ThrottleDbTest extends \PHPUnit_Extensions_Database_TestCase {
 
     /**
      * @var DbAdapter
@@ -67,7 +67,7 @@ class ThrottleTest extends \PHPUnit_Extensions_Database_TestCase {
     }
 
     protected function getDataSet() {
-        return $this->createFlatXMLDataSet(__DIR__ . '/data/beaucal_throttle-seed.xml');
+        return $this->createFlatXMLDataSet(__DIR__ . '/data/beaucal_throttle-db-seed.xml');
     }
 
     public function testGetLockExisting() {
@@ -97,6 +97,9 @@ class ThrottleTest extends \PHPUnit_Extensions_Database_TestCase {
 
         $this->assertTrue(
         $this->throttle->takeLock('nonexisting', new DateTimeUnit(1, 'week'))
+        );
+        $this->assertFalse(
+        $this->throttle->takeLock('nonexisting', new DateTimeUnit(7, 'years'))
         );
     }
 
@@ -158,6 +161,14 @@ class ThrottleTest extends \PHPUnit_Extensions_Database_TestCase {
         $this->assertFalse($throttle->takeLock(
         'setLockReturnsFalse', new DateTimeUnit(3, 'minutes'))
         );
+    }
+
+    /**
+     * @expectedException BeaucalLongThrottle\Exception\RuntimeException
+     * @expectedExceptionMessage key contained reserved separator
+     */
+    public function testTakeLockWithSeparator() {
+        $this->throttle->takeLock('bad::key', new DateTimeUnit(11, 'months'));
     }
 
 }

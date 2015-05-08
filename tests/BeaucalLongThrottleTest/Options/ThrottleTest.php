@@ -22,6 +22,7 @@ class ThrottleTest extends \PHPUnit_Framework_TestCase {
 
     public function testDefaults() {
         $defaults = [
+            'separator' => '::',
             'adapter_class' => 'BeaucalLongThrottle\Adapter\Db',
             'verify_lock' => true,
         ];
@@ -32,6 +33,7 @@ class ThrottleTest extends \PHPUnit_Framework_TestCase {
 
     public function testSetters() {
         $overrides = [
+            'separator' => 'another',
             'adapter_class' => 'another',
             'verify_lock' => false,
         ];
@@ -44,6 +46,7 @@ class ThrottleTest extends \PHPUnit_Framework_TestCase {
     public function testConfigOverrides() {
         $config = require __DIR__ . '/data/beaucallongthrottle.local.php';
         $options = new ThrottleOptions($config['beaucallongthrottle']['throttle']);
+        $this->assertEquals('separator_another', $options->getSeparator());
         $this->assertEquals('adapter_class_another', $options->getAdapterClass());
         $this->assertEquals('verify_lock_another', $options->getVerifyLock());
     }

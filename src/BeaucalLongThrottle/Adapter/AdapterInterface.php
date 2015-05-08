@@ -13,6 +13,11 @@ interface AdapterInterface {
     public function rollback();
 
     /**
+     * @param string $separator
+     */
+    public function setSeparator($separator);
+
+    /**
      * @param string [$key]  specific key, or null to clear all
      */
     public function clearExpiredLock($key = null);

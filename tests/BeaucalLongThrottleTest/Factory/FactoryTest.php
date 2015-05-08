@@ -18,7 +18,12 @@ class FactoryTest extends \PHPUnit_Framework_TestCase {
      */
     protected $adapter;
 
-    const CONFIG_MOCK = ['success'];
+    const CONFIG_MOCK = [
+        'BeaucalLongThrottle\Adapter\Db' =>
+        ['options_class' => 'BeaucalLongThrottle\Options\DbAdapter'],
+        'BeaucalLongThrottle\Adapter\DbMultiple' =>
+        ['options_class' => 'BeaucalLongThrottle\Options\DbMultipleAdapter']
+    ];
 
     public function setUp() {
         parent::setUp();
@@ -56,18 +61,6 @@ class FactoryTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals(self::CONFIG_MOCK, $config);
     }
 
-    public function testDbAdapterOptionsFactory() {
-        $class = 'BeaucalLongThrottle\Options\DbAdapter';
-        $options = $this->serviceManager->get($class);
-        $this->assertInstanceOf($class, $options);
-    }
-
-    public function testThrottleOptionsFactory() {
-        $class = 'BeaucalLongThrottle\Options\Throttle';
-        $options = $this->serviceManager->get($class);
-        $this->assertInstanceOf($class, $options);
-    }
-
     public function testThrottleFactory() {
         $class = 'BeaucalLongThrottle\Service\Throttle';
         $options = $this->serviceManager->get($class);
@@ -83,8 +76,14 @@ class FactoryTest extends \PHPUnit_Framework_TestCase {
 
     public function testDbAdapterFactory() {
         $class = 'BeaucalLongThrottle\Adapter\Db';
-        $options = $this->serviceManager->get($class);
-        $this->assertInstanceOf($class, $options);
+        $instance = $this->serviceManager->get($class);
+        $this->assertInstanceOf($class, $instance);
+    }
+
+    public function testDbMultipleAdapterFactory() {
+        $class = 'BeaucalLongThrottle\Adapter\DbMultiple';
+        $instance = $this->serviceManager->get($class);
+        $this->assertInstanceOf($class, $instance);
     }
 
 }

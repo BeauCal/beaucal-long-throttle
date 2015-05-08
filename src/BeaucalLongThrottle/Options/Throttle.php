@@ -6,8 +6,25 @@ use Zend\Stdlib\AbstractOptions;
 
 class Throttle extends AbstractOptions {
 
+    protected $separator = '::';
     protected $adapterClass = 'BeaucalLongThrottle\Adapter\Db';
     protected $verifyLock = true;
+
+    /**
+     * @return string
+     */
+    public function getSeparator() {
+        return $this->separator;
+    }
+
+    /**
+     * @param string $separator
+     * @return Throttle
+     */
+    public function setSeparator($separator) {
+        $this->separator = $separator;
+        return $this;
+    }
 
     /**
      * @return string

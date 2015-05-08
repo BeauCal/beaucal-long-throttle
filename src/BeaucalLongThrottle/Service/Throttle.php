@@ -4,7 +4,7 @@ namespace BeaucalLongThrottle\Service;
 
 use BeaucalLongThrottle\Term\AbstractTerm;
 use BeaucalLongThrottle\Adapter\AdapterInterface as ThrottleAdapterInterface;
-use BeaucalLongThrottle\Exception\PhantomLockException;
+use BeaucalLongThrottle\Exception;
 use Zend\Stdlib\AbstractOptions;
 
 class Throttle {
@@ -22,8 +22,12 @@ class Throttle {
     public function __construct(
     ThrottleAdapterInterface $adapter, AbstractOptions $options
     ) {
-        $this->adapter = $adapter;
         $this->options = $options;
+        $this->adapter = $adapter;
+        if (!$this->options->getSeparator()) {
+            throw new Exception\OptionException('Separator is not set');
+        }
+        $this->adapter->setSeparator($this->options->getSeparator());
     }
 
     /**
@@ -38,12 +42,16 @@ class Throttle {
      *
      * @param string $key
      * @param AbstractTerm $term
-     * @throws PhantomLockException
+     * @throws Exception\PhantomLockException
+     * @throws Exception\RuntimeException       if key contains separator
      * @return boolean
      */
     public function takeLock($key, AbstractTerm $term) {
-        $this->adapter->beginTransaction();
+        if (strstr($key, $this->options->getSeparator())) {
+            throw new Exception\RuntimeException('key contained reserved separator');
+        }
 
+        $this->adapter->beginTransaction();
         try {
             $clearKey = $this->adapter->getOptions()->getClearAllIsCheap() ?
             null : $key;
@@ -56,20 +64,24 @@ class Throttle {
 
             if ($result) {
                 if ($this->options->getVerifyLock() && !$this->adapter->verifyLock($key)) {
-                    throw new PhantomLockException;
+                    throw new Exception\PhantomLockException;
                 }
 
                 $this->adapter->commit();
                 return true;
             }
-        } catch (PhantomLockException $e) {
+        } catch (Exception\PhantomLockException $e) {
             /**
              * Lock-setting reported success but actually failed;
              * this is VERY BAD and needs to be addressed by sysadmin.
              */
             $this->adapter->rollback();
             throw $e;
+        } catch (Exception\OptionException $e) {
+            $this->adapter->rollback();
+            throw $e;
         } catch (\Exception $e) {
+            echo $e->getMessage();
             /**
              * Most likely from setLock; standard.
              */

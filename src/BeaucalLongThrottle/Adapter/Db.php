@@ -15,6 +15,11 @@ class Db implements ThrottleAdapterInterface {
     protected $gateway;
 
     /**
+     * @var string
+     */
+    protected $separator;
+
+    /**
      * @var AbstractOptions
      */
     protected $options;
@@ -22,6 +27,13 @@ class Db implements ThrottleAdapterInterface {
     public function __construct(TableGateway $gateway, AbstractOptions $options) {
         $this->gateway = $gateway;
         $this->options = $options;
+    }
+
+    /**
+     * @param string $separator
+     */
+    public function setSeparator($separator) {
+        $this->separator = (string) $separator;
     }
 
     /**
