@@ -44,3 +44,24 @@ else {
  * This is truly exceptional and shouldn't be just thrown aside.
  */
 ```
+
+
+### Allow More Than One Lock
+You can allow any number of locks e.g. 5/hour, 100/day.  Here's how:
+
+```PHP
+// in beaucallongthrottle.global.php
+$throttle = [
+// ...
+    'adapter_class' => 'BeaucalLongThrottle\Adapter\DbMultiple', // was Adapter\Db
+// ...
+]
+$regexCounts = [
+    '/^user-mailing-[0-9]+$/' => 10
+];
+
+// in controller
+if ($throttle->takeLock('user-mailing-1234', new DateTimeUnit(1, 'month'))) {
+// ...
+}
+```
