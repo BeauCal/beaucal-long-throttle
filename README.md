@@ -57,11 +57,18 @@ $throttle = [
 // ...
 ]
 $regexCounts = [
-    '/^user-mailing-[0-9]+$/' => 10
+    /**
+     * E.g. You can create 3 'do-stuff' locks before the lock can't be taken.
+     * Those not matching here are allowed the usual 1.
+     */
+    '/^do-stuff+$/' => 2
 ];
 
 // in controller
-if ($throttle->takeLock('user-mailing-1234', new DateTimeUnit(1, 'month'))) {
+$throttle->takeLock('do-stuff', new DateTimeUnit(1, 'day')); // TRUE
+$throttle->takeLock('do-stuff', new DateTimeUnit(1, 'day')); // TRUE
+$throttle->takeLock('do-stuff', new DateTimeUnit(1, 'day')); // FALSE
 // ...
-}
+// A DAY LATER
+$throttle->takeLock('do-stuff', new DateTimeUnit(1, 'day')); // TRUE
 ```
