@@ -10,7 +10,8 @@ use BeaucalLongThrottle\Factory\LockHandleFactory;
 class DbAdapterAbstractFactory implements AbstractFactoryInterface {
 
     const CONFIG_KEY = 'beaucallongthrottle';
-    const CONFIG_BOOTSTRAP = [
+
+    protected $configBootstrap = [
         'BeaucalLongThrottle\Adapter\Db' => [
             'options_class' => 'BeaucalLongThrottle\Options\DbAdapter'
         ],
@@ -81,7 +82,7 @@ class DbAdapterAbstractFactory implements AbstractFactoryInterface {
         if (isset($config[self::CONFIG_KEY])) {
             $this->config = $config[self::CONFIG_KEY];
         } else {
-            $this->config = self::CONFIG_BOOTSTRAP;
+            $this->config = $this->configBootstrap;
         }
         return $this->config;
     }
