@@ -52,7 +52,7 @@ else {
 You can allow any number of locks e.g. 'lock1' => 5/hour, 'lock2' => 100/day.  Here's how:
 
 ```PHP
-// in beaucallongthrottle.global.php
+// copy beaucallongthrottle.global.php to your config/autoload/
 $throttle = [
 // ...
     'adapter_class' => 'BeaucalLongThrottle\Adapter\DbMultiple', // was Adapter\Db
