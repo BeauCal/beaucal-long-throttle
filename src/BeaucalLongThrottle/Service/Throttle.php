@@ -5,6 +5,7 @@ namespace BeaucalLongThrottle\Service;
 use BeaucalLongThrottle\Term\AbstractTerm;
 use BeaucalLongThrottle\Adapter\AdapterInterface as ThrottleAdapterInterface;
 use BeaucalLongThrottle\Exception;
+use BeaucalLongThrottle\Lock;
 use Zend\Stdlib\AbstractOptions;
 
 class Throttle {
@@ -42,9 +43,8 @@ class Throttle {
      *
      * @param string $key
      * @param AbstractTerm $term
-     * @throws Exception\PhantomLockException
-     * @throws Exception\RuntimeException       if key contains separator
-     * @return boolean
+     * @throws \Exception
+     * @return mixed Lock\Handle or false
      */
     public function takeLock($key, AbstractTerm $term) {
         if (strstr($key, $this->options->getSeparator())) {
@@ -61,34 +61,29 @@ class Throttle {
              * Failure may very well throw exceptions.
              */
             $result = $this->adapter->setLock($key, $term->getEndDate());
+            if ($result instanceof Lock\Handle) {
+                $this->adapter->commit();
 
-            if ($result) {
-                if ($this->options->getVerifyLock() && !$this->adapter->verifyLock($key)) {
+                if ($this->options->getVerifyLock() && !$this->adapter->verifyLock($result)) {
                     throw new Exception\PhantomLockException;
                 }
-
-                $this->adapter->commit();
-                return true;
+                return $result;
             }
         } catch (Exception\PhantomLockException $e) {
-            /**
-             * Lock-setting reported success but actually failed;
-             * this is VERY BAD and needs to be addressed by sysadmin.
-             */
-            $this->adapter->rollback();
-            throw $e;
-        } catch (Exception\OptionException $e) {
-            $this->adapter->rollback();
             throw $e;
         } catch (\Exception $e) {
-            echo $e->getMessage();
-            /**
-             * Most likely from setLock; standard.
-             */
+            $this->adapter->rollback();
+            throw $e;
         }
-
         $this->adapter->rollback();
         return false;
+    }
+
+    /**
+     * @param Lock\Handle $handle
+     */
+    public function clearLock(Lock\Handle $handle) {
+        $this->adapter->clearLock($handle);
     }
 
     public function clearExpiredLocks() {

@@ -95,9 +95,9 @@ class ThrottleDbMultipleTest extends \PHPUnit_Extensions_Database_TestCase {
         );
 
         for ($i = 0; $i < 4; $i++) {
-            $this->assertTrue(
-            $this->throttle->takeLock('past', new DateTimeUnit(17, 'days'))
-            );
+            $handle = $this->throttle->takeLock('past',
+            new DateTimeUnit(17, 'days'));
+            $this->assertTrue((bool) $handle);
         }
         $this->assertFalse(
         $this->throttle->takeLock('past', new DateTimeUnit(1, 'minute'))
@@ -109,9 +109,11 @@ class ThrottleDbMultipleTest extends \PHPUnit_Extensions_Database_TestCase {
         $select->where->like('key', '%::nonexisting');
         $this->assertEmpty($this->gateway->selectWith($select)->count());
 
-        $this->assertTrue(
-        $this->throttle->takeLock('nonexisting', new DateTimeUnit(1, 'week'))
-        );
+        $handle = $this->throttle->takeLock('nonexisting',
+        new DateTimeUnit(1, 'week'));
+        $this->assertTrue((bool) $handle);
+        $this->assertInstanceOf('BeaucalLongThrottle\Lock\Handle', $handle);
+
         $this->assertFalse(
         $this->throttle->takeLock('nonexisting', new DateTimeUnit(1, 'week'))
         );
@@ -120,22 +122,24 @@ class ThrottleDbMultipleTest extends \PHPUnit_Extensions_Database_TestCase {
     public function testGetLockSimulate() {
         $key = 'simulate';
         for ($i = 0; $i < 3; $i++) {
-            $this->assertTrue(
-            $this->throttle->takeLock($key, new DateTimeUnit(1, 'second'))
+            $handle = $this->throttle->takeLock(
+            $key, new DateTimeUnit(1, 'second')
             );
+            $this->assertTrue((bool) $handle);
         }
         $this->assertFalse(
         $this->throttle->takeLock($key, new DateTimeUnit(1, 'second'))
         );
         sleep(1);
-        $this->assertTrue(
-        $this->throttle->takeLock($key, new DateTimeUnit(1, 'second'))
-        );
+
+        $handle = $this->throttle->takeLock($key, new DateTimeUnit(1, 'second'));
+        $this->assertTrue((bool) $handle);
         sleep(3);
+
         for ($i = 0; $i < 3; $i++) {
-            $this->assertTrue(
-            $this->throttle->takeLock($key, new DateTimeUnit(1, 'minute'))
-            );
+            $handle = $this->throttle->takeLock($key,
+            new DateTimeUnit(1, 'minute'));
+            $this->assertTrue((bool) $handle);
         }
         $this->assertFalse(
         $this->throttle->takeLock($key, new DateTimeUnit(1, 'second'))

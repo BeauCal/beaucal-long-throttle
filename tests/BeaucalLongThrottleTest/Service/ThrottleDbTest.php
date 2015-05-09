@@ -9,6 +9,7 @@ use BeaucalLongThrottle\Adapter\Db as ThrottleDbAdapter;
 use BeaucalLongThrottle\Term\DateTimeUnit;
 use BeaucalLongThrottle\Options\DbAdapter as ThrottleDbAdapterOptions;
 use BeaucalLongThrottle\Options\Throttle as ThrottleOptions;
+use BeaucalLongThrottle\Lock;
 
 /**
  * @group beaucal_throttle
@@ -85,9 +86,9 @@ class ThrottleDbTest extends \PHPUnit_Extensions_Database_TestCase {
         1, $this->gateway->select(['key' => 'past'])->count()
         );
 
-        $this->assertTrue(
-        $this->throttle->takeLock('past', new DateTimeUnit(1, 'week'))
-        );
+        $handle = $this->throttle->takeLock('past', new DateTimeUnit(1, 'week'));
+        $this->assertTrue((bool) $handle);
+        $this->assertInstanceOf('BeaucalLongThrottle\Lock\Handle', $handle);
     }
 
     public function testGetLockNonExisting() {
@@ -95,9 +96,11 @@ class ThrottleDbTest extends \PHPUnit_Extensions_Database_TestCase {
         0, $this->gateway->select(['key' => 'nonexisting'])->count()
         );
 
-        $this->assertTrue(
-        $this->throttle->takeLock('nonexisting', new DateTimeUnit(1, 'week'))
-        );
+        $handle = $this->throttle->takeLock('nonexisting',
+        new DateTimeUnit(1, 'week'));
+        $this->assertTrue((bool) $handle);
+        $this->assertInstanceOf('BeaucalLongThrottle\Lock\Handle', $handle);
+
         $this->assertFalse(
         $this->throttle->takeLock('nonexisting', new DateTimeUnit(7, 'years'))
         );
@@ -105,16 +108,42 @@ class ThrottleDbTest extends \PHPUnit_Extensions_Database_TestCase {
 
     public function testGetLockSimulate() {
         $key = 'simulate';
-        $this->assertTrue(
-        $this->throttle->takeLock($key, new DateTimeUnit(1, 'second'))
-        );
+        $handle = $this->throttle->takeLock($key, new DateTimeUnit(1, 'second'));
+        $this->assertTrue((bool) $handle);
+        $this->assertInstanceOf('BeaucalLongThrottle\Lock\Handle', $handle);
+
         $this->assertFalse(
         $this->throttle->takeLock($key, new DateTimeUnit(1, 'second'))
         );
         sleep(1);
-        $this->assertTrue(
-        $this->throttle->takeLock($key, new DateTimeUnit(1, 'second'))
+
+        $handle = $this->throttle->takeLock($key, new DateTimeUnit(1, 'second'));
+        $this->assertTrue((bool) $handle);
+        $this->assertInstanceOf('BeaucalLongThrottle\Lock\Handle', $handle);
+    }
+
+    public function testTakeAndClearLock() {
+        $key = 'take-and-clear';
+        $handle = $this->throttle->takeLock(
+        $key, new DateTimeUnit(88, 'years')
         );
+        $this->assertTrue((bool) $handle);
+        $this->assertInstanceOf('BeaucalLongThrottle\Lock\Handle', $handle);
+        $this->assertCount(
+        1, $this->gateway->select(['key' => $key])
+        );
+
+        $this->throttle->clearLock($handle);
+        $this->assertEmpty($this->gateway->select(['key' => $key]));
+
+        /**
+         * And again.
+         */
+        $this->throttle->clearLock($handle);
+    }
+
+    public function testClearLockInvalid() {
+        $this->throttle->clearLock(new Lock\Handle);
     }
 
     public function testGetOptions() {
@@ -138,12 +167,13 @@ class ThrottleDbTest extends \PHPUnit_Extensions_Database_TestCase {
         'BeaucalLongThrottle\Adapter\Db', ['setLock'],
         [$this->gateway, $this->throttleDbAdapter->getOptions()]
         );
+        $handle = new Lock\Handle;
         $adapterMock->expects($this->any())
-        ->method('setLock')->will($this->returnValue(true));
+        ->method('setLock')->will($this->returnValue($handle));
+        $adapterMock->expects($this->any())
+        ->method('verifyLock')->will($this->returnValue(false));
 
-        $throttle = new Throttle(
-        $adapterMock, new ThrottleOptions
-        );
+        $throttle = new Throttle($adapterMock, new ThrottleOptions);
         $throttle->takeLock('phantom', new DateTimeUnit(10, 'years'));
     }
 

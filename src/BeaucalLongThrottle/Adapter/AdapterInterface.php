@@ -3,6 +3,7 @@
 namespace BeaucalLongThrottle\Adapter;
 
 use DateTime;
+use BeaucalLongThrottle\Lock;
 
 interface AdapterInterface {
 
@@ -25,13 +26,18 @@ interface AdapterInterface {
     /**
      * @param string $key
      * @param DateTime $endDate
-     * @return bool
+     * @return mixed Lock\Handle or false
      */
     public function setLock($key, DateTime $endDate);
 
     /**
-     * @param string $key
+     * @param Lock\Handle $handle
      * @return bool
      */
-    public function verifyLock($key);
+    public function verifyLock(Lock\Handle $handle);
+
+    /**
+     * @param Lock\Handle $handle
+     */
+    public function clearLock(Lock\Handle $handle);
 }

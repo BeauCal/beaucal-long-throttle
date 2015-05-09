@@ -11,8 +11,6 @@ use BeaucalLongThrottle\Exception;
  */
 class DbMultiple extends Db {
 
-    protected $lastInsertedIx;
-
     /**
      * @param string $key
      */
@@ -30,10 +28,9 @@ class DbMultiple extends Db {
     /**
      * @param string $key
      * @param DateTime $endDate
-     * @return bool
+     * @return mixed Lock\Handle or false
      */
     public function setLock($key, DateTime $endDate) {
-        $this->lastInsertedIx = null;
 
         /**
          * Try to grab a unique slot.
@@ -53,22 +50,21 @@ class DbMultiple extends Db {
             $tryIxs = array_diff(range(1, $count), $locks);
         }
         foreach ($tryIxs as $ix) {
+            $key = "{$ix}{$this->separator}{$key}";
             try {
-                $insertResult = $this->gateway->insert([
-                    'key' => "{$ix}{$this->separator}{$key}",
+                $result = $this->gateway->insert([
+                    'key' => $key,
                     'end_datetime' => $endDate->format(
                     $this->options->getDbDateTimeFormat()
                     )
                 ]);
-                if ($insertResult) {
-                    $this->lastInsertedIx = $ix;
-                    return true;
+                if ($result) {
+                    return $this->createLockHandle($key);
                 }
             } catch (\Exception $e) {
 
             }
         }
-        $this->lastInsertedIx = null;
         return false;
     }
 
@@ -96,16 +92,6 @@ class DbMultiple extends Db {
             }
         }
         return $count;
-    }
-
-    /**
-     * @param string $key
-     * @return bool
-     */
-    public function verifyLock($key) {
-        return (bool) $this->gateway->select([
-            'key' => "{$this->lastInsertedIx}{$this->separator}{$key}"
-        ])->count();
     }
 
 }
