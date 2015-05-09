@@ -1,4 +1,7 @@
 # BeaucalLongThrottle
+
+**Now with 100% code coverage.**
+
 Prevent an action for some amount of time.  Hours, day, months, years, anything.
 Allows for multiple locks (e.g. 100/day) and clearing/releasing a lock just made.
 And it works just like it should, every single lock lasts exactly how long you specify.
