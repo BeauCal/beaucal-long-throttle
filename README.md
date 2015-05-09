@@ -65,11 +65,22 @@ $regexCounts = [
 ];
 
 // in controller
-$throttle->takeLock('do-stuff', new DateTimeUnit(1, 'day')); // TRUE
-$throttle->takeLock('do-stuff', new DateTimeUnit(1, 'day')); // TRUE
-$throttle->takeLock('do-stuff', new DateTimeUnit(1, 'day')); // TRUE
+$throttle->takeLock('do-stuff', new DateTimeUnit(1, 'day')); // YES
+$throttle->takeLock('do-stuff', new DateTimeUnit(1, 'day')); // YES
+$throttle->takeLock('do-stuff', new DateTimeUnit(1, 'day')); // YES
 $throttle->takeLock('do-stuff', new DateTimeUnit(1, 'day')); // FALSE
 // ...
 // A DAY LATER
-$throttle->takeLock('do-stuff', new DateTimeUnit(1, 'day')); // TRUE
+$throttle->takeLock('do-stuff', new DateTimeUnit(1, 'day')); // YES
+```
+
+### Clearing Locks
+
+```PHP
+$handle = $throttle->takeLock('year-end', new DateTimeUnit(1, 'year'));
+$throttle->takeLock('year-end', new DateTimeUnit(1, 'year')); // FALSE
+if ($whoopsBackingOut) {
+    $throttle->clearLock($handle);
+}
+$throttle->takeLock('year-end', new DateTimeUnit(1, 'year')); // YES
 ```
