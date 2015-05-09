@@ -135,14 +135,14 @@ class ThrottleDbMultipleTest extends \PHPUnit_Extensions_Database_TestCase {
         $key = 'simulate';
         for ($i = 0; $i < 3; $i++) {
             $handle = $this->throttle->takeLock(
-            $key, new DateTimeUnit(1, 'second')
+            $key, new DateTimeUnit(2, 'second')
             );
             $this->assertTrue((bool) $handle);
         }
         $this->assertFalse(
         $this->throttle->takeLock($key, new DateTimeUnit(1, 'second'))
         );
-        sleep(1);
+        sleep(2);
 
         $handle = $this->throttle->takeLock($key, new DateTimeUnit(1, 'second'));
         $this->assertTrue((bool) $handle);
