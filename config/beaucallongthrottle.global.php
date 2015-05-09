@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Drop into ./config/autoload/
+ * If modified, drop into ./config/autoload/
  */
 $dbAdapter = [
 //    'use_transactions' => true,

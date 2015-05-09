@@ -8,6 +8,9 @@ use BeaucalLongThrottle\Service\Throttle;
 use BeaucalLongThrottle\Adapter\Db as ThrottleDbAdapter;
 use BeaucalLongThrottle\Options\DbAdapter as ThrottleDbAdapterOptions;
 use BeaucalLongThrottle\Options\Throttle as ThrottleOptions;
+use BeaucalLongThrottle\Factory\LockHandleFactory;
+use BeaucalLongThrottle\Lock;
+use BeaucalLongThrottle\Term\DateTimeUnit;
 
 /**
  * @group beaucal_throttle
@@ -41,8 +44,9 @@ class DbTest extends \PHPUnit_Extensions_Database_TestCase {
         $this->gateway = new TableGateway(
         $dbOptions->getDbTable(), $this->getAdapter()
         );
-        $this->throttleDbAdapter = new ThrottleDbAdapter($this->gateway,
-        $dbOptions);
+        $this->throttleDbAdapter = new ThrottleDbAdapter(
+        $this->gateway, $dbOptions, new LockHandleFactory
+        );
 
         $throttleOptions = new ThrottleOptions;
         $this->throttle = new Throttle(
@@ -82,6 +86,35 @@ class DbTest extends \PHPUnit_Extensions_Database_TestCase {
 
         $this->assertEmpty($this->gateway->select(['key' => 'past2']));
         $this->assertNotEmpty($this->gateway->select(['key' => 'forever']));
+    }
+
+    public function testCreateLockHandleLooped() {
+        $dbOptions = new ThrottleDbAdapterOptions;
+
+        $gateway = new TableGateway(
+        $dbOptions->getDbTable(), $this->getAdapter()
+        );
+
+        $factoryMock = $this->getMock('BeaucalLongThrottle\Factory\LockHandleFactory');
+        $factoryMock->expects($this->any())
+        ->method('createHandle')->will($this->returnValue(new Lock\Handle));
+
+        $throttleDbAdapter = new ThrottleDbAdapter(
+        $gateway, $dbOptions, $factoryMock
+        );
+
+        $throttleOptions = new ThrottleOptions;
+        $throttle = new Throttle($throttleDbAdapter, $throttleOptions);
+
+        /**
+         * First lock works, second tries to get a new handle but can't.
+         */
+        $throttle->takeLock(
+        'handleOk', new DateTimeUnit(80, 'minutes')
+        );
+        $this->assertFalse($throttle->takeLock(
+        'handleRepeats', new DateTimeUnit(80, 'seconds')
+        ));
     }
 
 }

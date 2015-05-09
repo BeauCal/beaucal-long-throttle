@@ -10,6 +10,7 @@ use BeaucalLongThrottle\Term\DateTimeUnit;
 use BeaucalLongThrottle\Options\DbAdapter as ThrottleDbAdapterOptions;
 use BeaucalLongThrottle\Options\Throttle as ThrottleOptions;
 use BeaucalLongThrottle\Lock;
+use BeaucalLongThrottle\Factory\LockHandleFactory;
 
 /**
  * @group beaucal_throttle
@@ -43,8 +44,9 @@ class ThrottleDbTest extends \PHPUnit_Extensions_Database_TestCase {
         $this->gateway = new TableGateway(
         $dbOptions->getDbTable(), $this->getAdapter()
         );
-        $this->throttleDbAdapter = new ThrottleDbAdapter($this->gateway,
-        $dbOptions);
+        $this->throttleDbAdapter = new ThrottleDbAdapter(
+        $this->gateway, $dbOptions, new LockHandleFactory
+        );
 
         $throttleOptions = new ThrottleOptions;
         $this->throttle = new Throttle(
@@ -165,7 +167,7 @@ class ThrottleDbTest extends \PHPUnit_Extensions_Database_TestCase {
     public function testPhantomLock() {
         $adapterMock = $this->getMock(
         'BeaucalLongThrottle\Adapter\Db', ['setLock'],
-        [$this->gateway, $this->throttleDbAdapter->getOptions()]
+        [$this->gateway, $this->throttleDbAdapter->getOptions(), new LockHandleFactory]
         );
         $handle = new Lock\Handle;
         $adapterMock->expects($this->any())
@@ -180,7 +182,7 @@ class ThrottleDbTest extends \PHPUnit_Extensions_Database_TestCase {
     public function testSetLockReturnsFalse() {
         $adapterMock = $this->getMock(
         'BeaucalLongThrottle\Adapter\Db', ['setLock'],
-        [$this->gateway, $this->throttleDbAdapter->getOptions()]
+        [$this->gateway, $this->throttleDbAdapter->getOptions(), new LockHandleFactory]
         );
         $adapterMock->expects($this->any())
         ->method('setLock')->will($this->returnValue(false));

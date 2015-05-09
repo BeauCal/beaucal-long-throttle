@@ -63,14 +63,14 @@ class FactoryTest extends \PHPUnit_Framework_TestCase {
 
     public function testThrottleFactory() {
         $class = 'BeaucalLongThrottle\Service\Throttle';
-        $options = $this->serviceManager->get($class);
-        $this->assertInstanceOf($class, $options);
+        $instance = $this->serviceManager->get($class);
+        $this->assertInstanceOf($class, $instance);
 
         /**
          * Alias.
          */
         $this->assertSame(
-        $options, $this->serviceManager->get('BeaucalLongThrottle')
+        $instance, $this->serviceManager->get('BeaucalLongThrottle')
         );
     }
 
@@ -82,6 +82,18 @@ class FactoryTest extends \PHPUnit_Framework_TestCase {
 
     public function testDbMultipleAdapterFactory() {
         $class = 'BeaucalLongThrottle\Adapter\DbMultiple';
+        $instance = $this->serviceManager->get($class);
+        $this->assertInstanceOf($class, $instance);
+    }
+
+    public function testWithoutFactoryConfig() {
+        $this->serviceManager->setAllowOverride(true);
+        $this->serviceManager->setFactory('Config',
+        function($sm) {
+            return [];
+        });
+
+        $class = 'BeaucalLongThrottle\Service\Throttle';
         $instance = $this->serviceManager->get($class);
         $this->assertInstanceOf($class, $instance);
     }

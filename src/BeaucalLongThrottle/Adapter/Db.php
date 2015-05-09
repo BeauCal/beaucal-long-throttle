@@ -5,6 +5,7 @@ namespace BeaucalLongThrottle\Adapter;
 use BeaucalLongThrottle\Adapter\AdapterInterface as ThrottleAdapterInterface;
 use BeaucalLongThrottle\Lock;
 use BeaucalLongThrottle\Exception;
+use BeaucalLongThrottle\Factory\LockHandleFactory;
 use DateTime;
 use Zend\Db\TableGateway\TableGateway;
 use Zend\Stdlib\AbstractOptions;
@@ -33,9 +34,18 @@ class Db implements ThrottleAdapterInterface {
      */
     protected $locks = [];
 
-    public function __construct(TableGateway $gateway, AbstractOptions $options) {
+    /**
+     * @var LockHandleFactory
+     */
+    protected $lockFactory;
+
+    public function __construct(
+    TableGateway $gateway, AbstractOptions $options,
+    LockHandleFactory $lockFactory
+    ) {
         $this->gateway = $gateway;
         $this->options = $options;
+        $this->lockFactory = $lockFactory;
     }
 
     /**
@@ -109,7 +119,7 @@ class Db implements ThrottleAdapterInterface {
      */
     protected function createLockHandle($key) {
         for ($i = 0; $i < self::LOCK_HANDLE_TRIES; $i++) {
-            $lockHandle = new Lock\Handle;
+            $lockHandle = $this->lockFactory->createHandle();
             if (isset($this->locks[$lockHandle->getToken()])) {
                 continue;
             }

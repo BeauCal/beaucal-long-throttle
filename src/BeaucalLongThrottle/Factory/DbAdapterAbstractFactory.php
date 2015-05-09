@@ -5,10 +5,19 @@ namespace BeaucalLongThrottle\Factory;
 use Zend\ServiceManager\AbstractFactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Db\TableGateway\TableGateway;
+use BeaucalLongThrottle\Factory\LockHandleFactory;
 
 class DbAdapterAbstractFactory implements AbstractFactoryInterface {
 
     const CONFIG_KEY = 'beaucallongthrottle';
+    const CONFIG_BOOTSTRAP = [
+        'BeaucalLongThrottle\Adapter\Db' => [
+            'options_class' => 'BeaucalLongThrottle\Options\DbAdapter'
+        ],
+        'BeaucalLongThrottle\Adapter\DbMultiple' => [
+            'options_class' => 'BeaucalLongThrottle\Options\DbMultipleAdapter'
+        ],
+    ];
 
     /**
      * @var array
@@ -56,7 +65,7 @@ class DbAdapterAbstractFactory implements AbstractFactoryInterface {
         $gateway = new TableGateway(
         $options->getDbTable(), $services->get($options->getDbAdapterClass())
         );
-        return new $requestedName($gateway, $options);
+        return new $requestedName($gateway, $options, new LockHandleFactory);
     }
 
     /**
@@ -71,6 +80,8 @@ class DbAdapterAbstractFactory implements AbstractFactoryInterface {
         $config = $services->has('Config') ? $services->get('Config') : [];
         if (isset($config[self::CONFIG_KEY])) {
             $this->config = $config[self::CONFIG_KEY];
+        } else {
+            $this->config = self::CONFIG_BOOTSTRAP;
         }
         return $this->config;
     }

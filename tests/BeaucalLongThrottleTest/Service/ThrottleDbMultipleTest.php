@@ -9,6 +9,7 @@ use BeaucalLongThrottle\Adapter\DbMultiple as ThrottleDbMultipleAdapter;
 use BeaucalLongThrottle\Term\DateTimeUnit;
 use BeaucalLongThrottle\Options\DbMultipleAdapter as ThrottleDbAdapterOptions;
 use BeaucalLongThrottle\Options\Throttle as ThrottleOptions;
+use BeaucalLongThrottle\Factory\LockHandleFactory;
 
 /**
  * @group beaucal_throttle
@@ -47,8 +48,9 @@ class ThrottleDbMultipleTest extends \PHPUnit_Extensions_Database_TestCase {
         $this->gateway = new TableGateway(
         $dbOptions->getDbTable(), $this->getAdapter()
         );
-        $this->throttleDbAdapter = new ThrottleDbMultipleAdapter($this->gateway,
-        $dbOptions);
+        $this->throttleDbAdapter = new ThrottleDbMultipleAdapter(
+        $this->gateway, $dbOptions, new LockHandleFactory
+        );
 
         $throttleOptions = new ThrottleOptions;
         $this->throttle = new Throttle(
@@ -175,7 +177,9 @@ class ThrottleDbMultipleTest extends \PHPUnit_Extensions_Database_TestCase {
         $gateway = new TableGateway(
         $dbOptions->getDbTable(), $this->getAdapter()
         );
-        $throttleDbAdapter = new ThrottleDbMultipleAdapter($gateway, $dbOptions);
+        $throttleDbAdapter = new ThrottleDbMultipleAdapter(
+        $gateway, $dbOptions, new LockHandleFactory
+        );
 
         $throttleOptions = new ThrottleOptions;
         $throttle = new Throttle($throttleDbAdapter, $throttleOptions);
@@ -196,7 +200,9 @@ class ThrottleDbMultipleTest extends \PHPUnit_Extensions_Database_TestCase {
         $gateway = new TableGateway(
         $dbOptions->getDbTable(), $this->getAdapter()
         );
-        $throttleDbAdapter = new ThrottleDbMultipleAdapter($gateway, $dbOptions);
+        $throttleDbAdapter = new ThrottleDbMultipleAdapter(
+        $gateway, $dbOptions, new LockHandleFactory
+        );
 
         $throttleOptions = new ThrottleOptions;
         $throttleOptions->setSeparator('');
@@ -215,7 +221,9 @@ class ThrottleDbMultipleTest extends \PHPUnit_Extensions_Database_TestCase {
         $gateway = new TableGateway(
         $dbOptions->getDbTable(), $this->getAdapter()
         );
-        $throttleDbAdapter = new ThrottleDbMultipleAdapter($gateway, $dbOptions);
+        $throttleDbAdapter = new ThrottleDbMultipleAdapter(
+        $gateway, $dbOptions, new LockHandleFactory
+        );
 
         $throttleOptions = new ThrottleOptions;
         $throttle = new Throttle($throttleDbAdapter, $throttleOptions);
@@ -236,7 +244,8 @@ class ThrottleDbMultipleTest extends \PHPUnit_Extensions_Database_TestCase {
         $gateway = new TableGateway(
         $dbOptions->getDbTable(), $this->getAdapter()
         );
-        $throttleDbAdapter = new ThrottleDbMultipleAdapter($gateway, $dbOptions);
+        $throttleDbAdapter = new ThrottleDbMultipleAdapter(
+        $gateway, $dbOptions, new LockHandleFactory);
 
         $throttleOptions = new ThrottleOptions;
         $throttle = new Throttle($throttleDbAdapter, $throttleOptions);
@@ -257,7 +266,9 @@ class ThrottleDbMultipleTest extends \PHPUnit_Extensions_Database_TestCase {
         $gateway = new TableGateway(
         $dbOptions->getDbTable(), $this->getAdapter()
         );
-        $throttleDbAdapter = new ThrottleDbMultipleAdapter($gateway, $dbOptions);
+        $throttleDbAdapter = new ThrottleDbMultipleAdapter(
+        $gateway, $dbOptions, new LockHandleFactory
+        );
 
         $throttleOptions = new ThrottleOptions;
         $throttle = new Throttle($throttleDbAdapter, $throttleOptions);
