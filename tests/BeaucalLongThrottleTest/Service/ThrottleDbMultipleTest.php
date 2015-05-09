@@ -94,10 +94,22 @@ class ThrottleDbMultipleTest extends \PHPUnit_Extensions_Database_TestCase {
         3, $this->gateway->selectWith($select)->count()
         );
 
+        $handles = [];
         for ($i = 0; $i < 4; $i++) {
             $handle = $this->throttle->takeLock('past',
             new DateTimeUnit(17, 'days'));
             $this->assertTrue((bool) $handle);
+            $handles[] = $handle;
+        }
+        $this->assertFalse(
+        $this->throttle->takeLock('past', new DateTimeUnit(1, 'minute'))
+        );
+
+        foreach ($handles as $handle) {
+            $this->throttle->clearLock($handle);
+            $this->assertTrue((bool)
+            $this->throttle->takeLock('past', new DateTimeUnit(1, 'minute'))
+            );
         }
         $this->assertFalse(
         $this->throttle->takeLock('past', new DateTimeUnit(1, 'minute'))
