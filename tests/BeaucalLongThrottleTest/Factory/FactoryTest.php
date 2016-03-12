@@ -17,8 +17,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase {
      * @var ZendDbAdapter
      */
     protected $adapter;
-
-    const CONFIG_MOCK = [
+    protected $configMock = [
         'BeaucalLongThrottle\Adapter\Db' =>
         ['options_class' => 'BeaucalLongThrottle\Options\DbAdapter'],
         'BeaucalLongThrottle\Adapter\DbMultiple' =>
@@ -40,7 +39,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase {
         $this->serviceManager->setFactory('Config',
         function($sm) {
             return [
-                'beaucallongthrottle' => self::CONFIG_MOCK
+                'beaucallongthrottle' => $this->configMock
             ];
         });
     }
@@ -58,7 +57,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase {
 
     public function testConfigFactory() {
         $config = $this->serviceManager->get('beaucallongthrottle_config');
-        $this->assertEquals(self::CONFIG_MOCK, $config);
+        $this->assertEquals($this->configMock, $config);
     }
 
     public function testThrottleFactory() {
