@@ -119,9 +119,9 @@ $throttle = [
 
 // in controller
 $throttle = $this->getServiceLocator()->get('BeaucalLongThrottle');
-$throttle->takeLock('not-too-long', new DateTimeUnit(1, 'minute')); // YES
-$throttle->takeLock('not-too-long', new DateTimeUnit(1, 'second')); // FALSE
-// ...
-// A MINUTE LATER
-$throttle->takeLock('not-too-long', new DateTimeUnit(5, 'minutes')); // YES
+
+
+// alternatively, a shortcut factory that doesn't require config
+$throttle = $this->getServiceLocator()->get('BeaucalLongThrottle_APC');
+
 ```

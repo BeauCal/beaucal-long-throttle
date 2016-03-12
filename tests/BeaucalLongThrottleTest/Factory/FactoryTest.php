@@ -121,4 +121,22 @@ class FactoryTest extends \PHPUnit_Framework_TestCase {
         $this->assertInstanceOf($class, $instance);
     }
 
+    public function testWithoutFactoryConfigApcThrottle() {
+        $this->serviceManager->setAllowOverride(true);
+        $this->serviceManager->setFactory('Config',
+        function($sm) {
+            return [];
+        });
+        $optionsKey = 'BeaucalLongThrottle\Options\Throttle';
+        $options = $this->serviceManager->get($optionsKey);
+        $this->serviceManager->setService($optionsKey, $options);
+
+        $class = 'BeaucalLongThrottle_APC';
+        $instance = $this->serviceManager->get($class);
+        $this->assertEquals(
+        'BeaucalLongThrottle\Adapter\Apc',
+        $instance->getOptions()->getAdapterClass()
+        );
+    }
+
 }

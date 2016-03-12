@@ -13,6 +13,10 @@ $dbAdapter = [
 //    'clear_all_is_cheap' => true
 ];
 
+$apcAdapter = [
+//    'apc_namespace' => 'beaucal_throttle',
+];
+
 $throttle = [
 //    'separator' => '::',
 //
@@ -41,10 +45,12 @@ $dbMultipleAdapter = $dbAdapter;
 $dbAdapter['options_class'] = 'BeaucalLongThrottle\Options\DbAdapter';
 $dbMultipleAdapter['options_class'] = 'BeaucalLongThrottle\Options\DbMultipleAdapter';
 $dbMultipleAdapter['regex_counts'] = $regexCounts;
+$apcAdapter['options_class'] = 'BeaucalLongThrottle\Options\ApcAdapter';
 return [
     'beaucallongthrottle' => [
         'throttle' => $throttle,
         'BeaucalLongThrottle\Adapter\Db' => $dbAdapter,
         'BeaucalLongThrottle\Adapter\DbMultiple' => $dbMultipleAdapter,
+        'BeaucalLongThrottle\Adapter\Apc' => $apcAdapter,
     ],
 ];

@@ -8,7 +8,6 @@ use BeaucalLongThrottle\Options\ApcAdapter as ApcOptions;
 use BeaucalLongThrottle\Exception\LockFactoryException;
 use BeaucalLongThrottle\Apc\Apc as ApcWrapper;
 use DateTime;
-use Zend\Math\Rand;
 
 /**
  * APC is not dependable for long-term locking.
