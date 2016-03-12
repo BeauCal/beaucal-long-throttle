@@ -86,6 +86,10 @@ class ApcTest extends \PHPUnit_Framework_TestCase {
 
     public function testApcExtensionWorking() {
         $this->assertTrue(extension_loaded('apc') || extension_loaded('apcu'));
+        $rand = Rand::getString(10, 'asdf');
+        $addMethod = extension_loaded('apcu') ? 'apcu_add' : 'apc_add';
+        $this->assertTrue($addMethod($rand, true, 100));
+        $this->assertFalse($addMethod($rand, true, 100));
     }
 
 }
