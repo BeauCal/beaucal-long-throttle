@@ -21,6 +21,7 @@ before_script:
  - mysql -u $DB_ROOT -e "CREATE DATABASE $DB_NAME;" || aborterror "Unable to create database."
  - mysql -u $DB_ROOT $DB_NAME < data/beaucal_throttle.sql || aborterror "Unable to import table."
  - mysql -u $DB_ROOT -e "GRANT ALL ON *.* TO '$DB_USER'@'$DB_HOST' IDENTIFIED BY '$DB_PASS';"
+ - composer install
 
 notifications:
   email: false
