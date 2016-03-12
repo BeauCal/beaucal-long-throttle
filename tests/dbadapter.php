@@ -2,8 +2,8 @@
 
 return [
     'db' => [
-        'username' => 'beaucallongthrottle',
-        'password' => 'beaucallongthrottle',
-        'dsn' => 'mysql:dbname=beaucallongthrottle;host=localhost;charset=utf8'
+        'username' => 'beaucallt',
+        'password' => 'beaucallt',
+        'dsn' => 'mysql:dbname=beaucallt;host=localhost;charset=utf8'
     ]
 ];
