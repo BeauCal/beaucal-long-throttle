@@ -10,6 +10,7 @@ use BeaucalLongThrottle\Options\ApcAdapter as ApcAdapterOptions;
 use BeaucalLongThrottle\Options\Throttle as ThrottleOptions;
 use BeaucalLongThrottle\Lock;
 use BeaucalLongThrottle\Factory\LockHandleFactory;
+use Zend\Math\Rand;
 
 /**
  * @group beaucal_throttle
@@ -41,7 +42,7 @@ class ThrottleApcTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testGetLockSimulate() {
-        $key = 'simulate';
+        $key = 'simulate' . Rand::getInteger(1, 2000000000);
         $ttl = new DateTimeUnit(1, 'second');
         $handle = $this->throttle->takeLock($key, $ttl);
         $this->assertInstanceOf('BeaucalLongThrottle\Lock\Handle', $handle);
@@ -62,7 +63,7 @@ class ThrottleApcTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testTakeAndClearLock() {
-        $key = 'take-and-clear';
+        $key = 'take-and-clear' . Rand::getInteger(1, 2000000000);
         $handle = $this->throttle->takeLock(
         $key, new DateTimeUnit(88, 'years')
         );
