@@ -8,6 +8,7 @@ use BeaucalLongThrottle\Options\ApcAdapter as ApcOptions;
 use BeaucalLongThrottle\Exception\LockFactoryException;
 use BeaucalLongThrottle\Apc\Apc as ApcWrapper;
 use DateTime;
+use Zend\Math\Rand;
 
 /**
  * APC is not dependable for long-term locking.
@@ -89,7 +90,12 @@ class Apc extends AbstractAdapter {
             }
         }
         if (getenv('TRAVIS')) {
-            echo __FUNCTION__ . ' APC could not add' . $key . PHP_EOL . PHP_EOL;
+            echo __FUNCTION__ . ' APC could not add ' . $key . PHP_EOL;
+            if (!$this->apc->add(Rand::getString(10, 'asdf'),
+            Rand::getString(10, 'asdf'), 1000)) {
+                echo '***apc_add not working***' . PHP_EOL;
+            }
+            echo get_class($this->apc) . PHP_EOL . PHP_EOL;
         }
         return false;
     }
