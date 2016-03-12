@@ -91,3 +91,26 @@ if ($whoopsBackingOut) {
 }
 $throttle->takeLock('year-end', new DateTimeUnit(1, 'year')); // YES
 ```
+
+
+### Lock with APC
+
+For something more quick-n-dirty, use APC locking. This is adequate
+for short-term throttling with the usual caveats regarding APC persistence
+(e.g. some other part of your app might flush the entire cache, a PHP restart, out of memory).
+
+```PHP
+// copy beaucallongthrottle.global.php to your config/autoload/
+$throttle = [
+// ...
+    'adapter_class' => 'BeaucalLongThrottle\Adapter\Apc', // was Adapter\Db
+// ...
+]
+
+// in controller
+$throttle->takeLock('not-too-long', new DateTimeUnit(1, 'minute')); // YES
+$throttle->takeLock('not-too-long', new DateTimeUnit(1, 'second')); // FALSE
+// ...
+// AN HOUR LATER
+$throttle->takeLock('not-too-long', new DateTimeUnit(5, 'minutes')); // YES
+```
