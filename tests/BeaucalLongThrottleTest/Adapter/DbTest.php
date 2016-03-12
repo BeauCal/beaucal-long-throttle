@@ -48,9 +48,8 @@ class DbTest extends \PHPUnit_Extensions_Database_TestCase {
         $this->gateway, $dbOptions, new LockHandleFactory
         );
 
-        $throttleOptions = new ThrottleOptions;
         $this->throttle = new Throttle(
-        $this->throttleDbAdapter, $throttleOptions
+        $this->throttleDbAdapter, new ThrottleOptions
         );
     }
 
@@ -103,18 +102,25 @@ class DbTest extends \PHPUnit_Extensions_Database_TestCase {
         $gateway, $dbOptions, $factoryMock
         );
 
-        $throttleOptions = new ThrottleOptions;
-        $throttle = new Throttle($throttleDbAdapter, $throttleOptions);
+        $throttle = new Throttle($throttleDbAdapter, new ThrottleOptions);
 
         /**
          * First lock works, second tries to get a new handle but can't.
          */
-        $throttle->takeLock(
-        'handleOk', new DateTimeUnit(80, 'minutes')
-        );
-        $this->assertFalse($throttle->takeLock(
-        'handleRepeats', new DateTimeUnit(80, 'seconds')
-        ));
+        $ttl = new DateTimeUnit(80, 'seconds');
+        $throttle->takeLock('handleOk', $ttl);
+        $this->assertFalse($throttle->takeLock('handleRepeats', $ttl));
+    }
+
+    public function testClearLock() {
+        $ttl = new DateTimeUnit(80, 'seconds');
+        $handle = $this->throttle->takeLock(__FUNCTION__, $ttl);
+        $this->assertInstanceOf('BeaucalLongThrottle\Lock\Handle', $handle);
+        $badHandle = $this->throttle->takeLock(__FUNCTION__, $ttl);
+        $this->assertFalse($badHandle);
+        $this->throttle->clearLock($handle);
+        $handle = $this->throttle->takeLock(__FUNCTION__, $ttl);
+        $this->assertInstanceOf('BeaucalLongThrottle\Lock\Handle', $handle);
     }
 
 }

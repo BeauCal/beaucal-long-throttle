@@ -3,7 +3,7 @@
 namespace BeaucalLongThrottle\Service;
 
 use BeaucalLongThrottle\Term\AbstractTerm;
-use BeaucalLongThrottle\Adapter\AdapterInterface as ThrottleAdapterInterface;
+use BeaucalLongThrottle\Adapter\AbstractAdapter;
 use BeaucalLongThrottle\Exception;
 use BeaucalLongThrottle\Lock;
 use Zend\Stdlib\AbstractOptions;
@@ -11,7 +11,7 @@ use Zend\Stdlib\AbstractOptions;
 class Throttle {
 
     /**
-     * @var ThrottleAdapterInterface
+     * @var AbstractAdapter
      */
     protected $adapter;
 
@@ -21,7 +21,7 @@ class Throttle {
     protected $options;
 
     public function __construct(
-    ThrottleAdapterInterface $adapter, AbstractOptions $options
+    AbstractAdapter $adapter, AbstractOptions $options
     ) {
         $this->options = $options;
         $this->adapter = $adapter;

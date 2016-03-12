@@ -21,7 +21,9 @@ class FactoryTest extends \PHPUnit_Framework_TestCase {
         'BeaucalLongThrottle\Adapter\Db' =>
         ['options_class' => 'BeaucalLongThrottle\Options\DbAdapter'],
         'BeaucalLongThrottle\Adapter\DbMultiple' =>
-        ['options_class' => 'BeaucalLongThrottle\Options\DbMultipleAdapter']
+        ['options_class' => 'BeaucalLongThrottle\Options\DbMultipleAdapter'],
+        'BeaucalLongThrottle\Adapter\Apc' =>
+        ['options_class' => 'BeaucalLongThrottle\Options\ApcAdapter']
     ];
 
     public function setUp() {
@@ -85,12 +87,34 @@ class FactoryTest extends \PHPUnit_Framework_TestCase {
         $this->assertInstanceOf($class, $instance);
     }
 
+    public function testApcAdapterFactory() {
+        $class = 'BeaucalLongThrottle\Adapter\Apc';
+        $instance = $this->serviceManager->get($class);
+        $this->assertInstanceOf($class, $instance);
+    }
+
     public function testWithoutFactoryConfig() {
         $this->serviceManager->setAllowOverride(true);
         $this->serviceManager->setFactory('Config',
         function($sm) {
             return [];
         });
+
+        $class = 'BeaucalLongThrottle\Service\Throttle';
+        $instance = $this->serviceManager->get($class);
+        $this->assertInstanceOf($class, $instance);
+    }
+
+    public function testWithoutFactoryConfigApc() {
+        $this->serviceManager->setAllowOverride(true);
+        $this->serviceManager->setFactory('Config',
+        function($sm) {
+            return [];
+        });
+        $optionsKey = 'BeaucalLongThrottle\Options\Throttle';
+        $options = $this->serviceManager->get($optionsKey);
+        $options->setAdapterClass('BeaucalLongThrottle\Adapter\Apc');
+        $this->serviceManager->setService($optionsKey, $options);
 
         $class = 'BeaucalLongThrottle\Service\Throttle';
         $instance = $this->serviceManager->get($class);

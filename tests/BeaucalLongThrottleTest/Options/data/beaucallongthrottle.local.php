@@ -8,6 +8,10 @@ $dbAdapter = [
     'clear_all_is_cheap' => 'clear_all_is_cheap_another'
 ];
 
+$apcAdapter = [
+    'apc_namespace' => 'apc_namespace_another',
+];
+
 $throttle = [
     'separator' => 'separator_another',
     'adapter_class' => 'adapter_class_another',
@@ -27,5 +31,6 @@ return [
         'throttle' => $throttle,
         'BeaucalLongThrottle\Adapter\Db' => $dbAdapter,
         'BeaucalLongThrottle\Adapter\DbMultiple' => $dbMultipleAdapter,
+        'BeaucalLongThrottle\Adapter\Apc' => $apcAdapter,
     ],
 ];

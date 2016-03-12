@@ -2,17 +2,13 @@
 
 namespace BeaucalLongThrottle\Adapter;
 
-use BeaucalLongThrottle\Adapter\AdapterInterface as ThrottleAdapterInterface;
 use BeaucalLongThrottle\Lock;
-use BeaucalLongThrottle\Exception;
 use BeaucalLongThrottle\Factory\LockHandleFactory;
+use BeaucalLongThrottle\Options\DbAdapter as DbOptions;
 use DateTime;
 use Zend\Db\TableGateway\TableGateway;
-use Zend\Stdlib\AbstractOptions;
 
-class Db implements ThrottleAdapterInterface {
-
-    const LOCK_HANDLE_TRIES = 1000;
+class Db extends AbstractAdapter {
 
     /**
      * @var TableGateway
@@ -20,28 +16,12 @@ class Db implements ThrottleAdapterInterface {
     protected $gateway;
 
     /**
-     * @var string
-     */
-    protected $separator;
-
-    /**
-     * @var AbstractOptions
+     * @var DbOptions
      */
     protected $options;
 
-    /**
-     * @var array   Lock\Handle token => lock's real key
-     */
-    protected $locks = [];
-
-    /**
-     * @var LockHandleFactory
-     */
-    protected $lockFactory;
-
     public function __construct(
-    TableGateway $gateway, AbstractOptions $options,
-    LockHandleFactory $lockFactory
+    TableGateway $gateway, DbOptions $options, LockHandleFactory $lockFactory
     ) {
         $this->gateway = $gateway;
         $this->options = $options;
@@ -49,14 +29,7 @@ class Db implements ThrottleAdapterInterface {
     }
 
     /**
-     * @param string $separator
-     */
-    public function setSeparator($separator) {
-        $this->separator = (string) $separator;
-    }
-
-    /**
-     * @return AbstractOptions
+     * @return DbOptions
      */
     public function getOptions() {
         return $this->options;
@@ -111,26 +84,6 @@ class Db implements ThrottleAdapterInterface {
 
         }
         return false;
-    }
-
-    /**
-     * @param string $key
-     * @return Lock\Handle
-     */
-    protected function createLockHandle($key) {
-        for ($i = 0; $i < self::LOCK_HANDLE_TRIES; $i++) {
-            $lockHandle = $this->lockFactory->createHandle();
-            if (isset($this->locks[$lockHandle->getToken()])) {
-                continue;
-            }
-            $this->locks[$lockHandle->getToken()] = $key;
-            return $lockHandle;
-        }
-
-        /**
-         * Will never happen unless Lock\Handle constructor goes non-random.
-         */
-        throw new Exception\RuntimeException('Could not create lock handle');
     }
 
     /**

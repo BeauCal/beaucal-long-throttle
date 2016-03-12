@@ -45,7 +45,7 @@ class DbAdapterAbstractFactory implements AbstractFactoryInterface {
         // @codeCoverageIgnoreEnd
 
         return is_subclass_of(
-        $requestedName, 'BeaucalLongThrottle\Adapter\AdapterInterface'
+        $requestedName, 'BeaucalLongThrottle\Adapter\AbstractAdapter'
         );
     }
 

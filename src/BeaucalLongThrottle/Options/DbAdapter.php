@@ -2,15 +2,12 @@
 
 namespace BeaucalLongThrottle\Options;
 
-use Zend\Stdlib\AbstractOptions;
-
-class DbAdapter extends AbstractOptions {
+class DbAdapter extends AbstractAdapter {
 
     protected $useTransactions = true;
     protected $dbAdapterClass = 'Zend\Db\Adapter\Adapter';
     protected $dbTable = 'beaucal_throttle';
     protected $dbDateTimeFormat = 'Y-m-d H:i:s';
-    protected $clearAllIsCheap = true;
 
     /**
      * @return bool
@@ -73,22 +70,6 @@ class DbAdapter extends AbstractOptions {
      */
     public function setDbTable($dbTable) {
         $this->dbTable = $dbTable;
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function getClearAllIsCheap() {
-        return $this->clearAllIsCheap;
-    }
-
-    /**
-     * @param bool $clearAllIsCheap
-     * @return DbAdapter
-     */
-    public function setClearAllIsCheap($clearAllIsCheap) {
-        $this->clearAllIsCheap = $clearAllIsCheap;
         return $this;
     }
 

@@ -12,6 +12,7 @@ return [
             'beaucallongthrottle_config' => 'BeaucalLongThrottle\Factory\ConfigFactory',
             'BeaucalLongThrottle\Service\Throttle' => 'BeaucalLongThrottle\Factory\ThrottleFactory',
             'BeaucalLongThrottle\Options\Throttle' => 'BeaucalLongThrottle\Factory\ThrottleOptionsFactory',
+            'BeaucalLongThrottle\Adapter\Apc' => 'BeaucalLongThrottle\Factory\ApcAdapterFactory'
         ],
     ],
 ];

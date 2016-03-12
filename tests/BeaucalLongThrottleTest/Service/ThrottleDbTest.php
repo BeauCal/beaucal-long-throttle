@@ -117,7 +117,11 @@ class ThrottleDbTest extends \PHPUnit_Extensions_Database_TestCase {
         $this->assertFalse(
         $this->throttle->takeLock($key, new DateTimeUnit(1, 'second'))
         );
-        sleep(1);
+
+        /**
+         * Pardon the wait.
+         */
+        usleep(1005000);
 
         $handle = $this->throttle->takeLock($key, new DateTimeUnit(1, 'second'));
         $this->assertTrue((bool) $handle);
