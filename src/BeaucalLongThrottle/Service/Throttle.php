@@ -72,9 +72,6 @@ class Throttle {
         } catch (Exception\PhantomLockException $e) {
             throw $e;
         } catch (\Exception $e) {
-            if (getenv('TRAVIS')) {
-                echo $e->getMessage() . PHP_EOL . $e->getTraceAsString() . PHP_EOL . PHP_EOL;
-            }
             $this->adapter->rollback();
             throw $e;
         }
