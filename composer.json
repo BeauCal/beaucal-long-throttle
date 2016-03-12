@@ -13,6 +13,7 @@
             "homepage": "https://www.beaucal.com"
         }
     ],
+	"minimum-stability": "alpha",
     "require": {
         "php": ">=5.4",
         "zendframework/zend-db" : "~2.1",
