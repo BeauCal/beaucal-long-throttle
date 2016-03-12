@@ -10,7 +10,6 @@ use BeaucalLongThrottle\Options\ApcAdapter as ApcAdapterOptions;
 use BeaucalLongThrottle\Options\Throttle as ThrottleOptions;
 use BeaucalLongThrottle\Lock;
 use BeaucalLongThrottle\Factory\LockHandleFactory;
-use Zend\Math\Rand;
 
 /**
  * @group beaucal_throttle
@@ -42,7 +41,7 @@ class ThrottleApcTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testGetLockSimulate() {
-        $key = 'simulate' . Rand::getInteger(1, 2000000000);
+        $key = 'simulate';
         $ttl = new DateTimeUnit(1, 'second');
         $handle = $this->throttle->takeLock($key, $ttl);
         $this->assertInstanceOf('BeaucalLongThrottle\Lock\Handle', $handle);
@@ -65,9 +64,9 @@ class ThrottleApcTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testTakeAndClearLock() {
-        $key = 'take-and-clear' . Rand::getInteger(1, 2000000000);
+        $key = 'take-and-clear';
         $handle = $this->throttle->takeLock(
-        $key, new DateTimeUnit(88, 'years')
+        $key, new DateTimeUnit(1, 'hour')
         );
         $this->assertInstanceOf('BeaucalLongThrottle\Lock\Handle', $handle);
         $keyApc = "beaucal_throttle::{$key}";
@@ -107,7 +106,7 @@ class ThrottleApcTest extends \PHPUnit_Framework_TestCase {
         ->method('verifyLock')->will($this->returnValue(false));
 
         $throttle = new Throttle($adapterMock, new ThrottleOptions);
-        $throttle->takeLock('phantom', new DateTimeUnit(10, 'years'));
+        $throttle->takeLock('phantom', new DateTimeUnit(1, 'hour'));
     }
 
     public function testSetLockReturnsFalse() {
@@ -131,7 +130,7 @@ class ThrottleApcTest extends \PHPUnit_Framework_TestCase {
      * @expectedExceptionMessage key contained reserved separator
      */
     public function testTakeLockWithSeparator() {
-        $this->throttle->takeLock('bad::key', new DateTimeUnit(11, 'months'));
+        $this->throttle->takeLock('bad::key', new DateTimeUnit(1, 'hour'));
     }
 
 }
