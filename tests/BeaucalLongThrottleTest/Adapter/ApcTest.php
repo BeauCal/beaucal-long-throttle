@@ -85,6 +85,12 @@ class ApcTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testApcExtensionWorking() {
+        if (extension_loaded('apc')) {
+            echo 'APC EXTENSION: apc' . PHP_EOL;
+        }
+        if (extension_loaded('apcu')) {
+            echo 'APC EXTENSION: apcu' . PHP_EOL;
+        }
         $this->assertTrue(extension_loaded('apc') || extension_loaded('apcu'));
         $rand = Rand::getString(10, 'asdf');
         $addMethod = extension_loaded('apcu') ? 'apcu_add' : 'apc_add';
