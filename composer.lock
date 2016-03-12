@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "41888deae5aa13b124ef25784c3ae944",
-    "content-hash": "3d417500aa9725865e347706456ea92c",
+    "hash": "628660e6e3d0d2f2d4f96f1d4fbdfbb7",
+    "content-hash": "39f10e980e228cb22c8d4c4158a37908",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -515,16 +515,16 @@
         },
         {
             "name": "phpunit/dbunit",
-            "version": "2.0.2",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/dbunit.git",
-                "reference": "390cefcb101e07e1d6400dbdfc3b90ecf2c1279f"
+                "reference": "76adbf67d800f9e275e4bb70f1106d02f152c7a4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/dbunit/zipball/390cefcb101e07e1d6400dbdfc3b90ecf2c1279f",
-                "reference": "390cefcb101e07e1d6400dbdfc3b90ecf2c1279f",
+                "url": "https://api.github.com/repos/sebastianbergmann/dbunit/zipball/76adbf67d800f9e275e4bb70f1106d02f152c7a4",
+                "reference": "76adbf67d800f9e275e4bb70f1106d02f152c7a4",
                 "shasum": ""
             },
             "require": {
@@ -566,7 +566,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2015-11-03 11:17:01"
+            "time": "2015-11-03 14:01:44"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -1359,7 +1359,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "phpunit/dbunit": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
