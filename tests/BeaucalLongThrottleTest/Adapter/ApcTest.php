@@ -11,6 +11,7 @@ use BeaucalLongThrottle\Factory\LockHandleFactory;
 use BeaucalLongThrottle\Lock;
 use BeaucalLongThrottle\Term\DateTimeUnit;
 use DateTime;
+use Zend\Math\Rand;
 
 /**
  * @group beaucal_throttle
@@ -81,6 +82,13 @@ class ApcTest extends \PHPUnit_Framework_TestCase {
 
     public function testSetLockPast() {
         $result = $this->apcAdapter->setLock('past', new DateTime('2000-01-01'));
+    }
+
+    public function testApcExtensionWorking() {
+        $rand = Rand::getString(10, 'asdf');
+        apc_clear_cache();
+        $this->assertTrue(apc_add($rand, true, 100));
+        $this->assertFalse(apc_add($rand, true, 100));
     }
 
 }
