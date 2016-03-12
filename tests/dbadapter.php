@@ -2,8 +2,8 @@
 
 return [
     'db' => [
-        'username' => 'beaucallt',
-        'password' => 'beaucallt',
+        'username' => 'travis',
+        'password' => '',
         'dsn' => 'mysql:dbname=beaucallt;host=localhost;charset=utf8'
     ]
 ];

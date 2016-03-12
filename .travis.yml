@@ -11,16 +11,15 @@ services:
 
 env:
   global:
-    - DB_ROOT="root"
     - DB_HOST="127.0.0.1"
     - DB_NAME="beaucallt"
-    - DB_USER="beaucallt"
-    - DB_PASS="beaucallt"
+    - DB_USER="travis"
+    - DB_PASS=""
 
 before_script:
- - mysql -u $DB_ROOT -e "CREATE DATABASE $DB_NAME;" || aborterror "Unable to create database."
- - mysql -u $DB_ROOT $DB_NAME < data/beaucal_throttle.sql || aborterror "Unable to import table."
- - mysql -u $DB_ROOT -e "GRANT ALL ON *.* TO '$DB_USER'@'$DB_HOST' IDENTIFIED BY '$DB_PASS';"
+ - mysql -uroot -e "CREATE DATABASE $DB_NAME;" || aborterror "Unable to create database."
+ - mysql -uroot $DB_NAME < data/beaucal_throttle.sql || aborterror "Unable to import table."
+ - mysql -uroot -e "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'$DB_HOST';"
  - composer install
 
 notifications:
