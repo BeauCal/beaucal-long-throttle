@@ -83,13 +83,13 @@ class Apc extends AbstractAdapter {
                 return $this->createLockHandle($key);
             } catch (LockFactoryException $e) {
                 if (getenv('TRAVIS')) {
-                    echo $e->getMessage() . PHP_EOL . $e->getTraceAsString() . PHP_EOL . PHP_EOL;
+                    echo $key . PHP_EOL . $e->getMessage() . PHP_EOL . $e->getTraceAsString() . PHP_EOL . PHP_EOL;
                 }
                 return false;
             }
         }
         if (getenv('TRAVIS')) {
-            echo __FUNCTION__ . ' APC could not add' . PHP_EOL . PHP_EOL;
+            echo __FUNCTION__ . ' APC could not add' . $key . PHP_EOL . PHP_EOL;
         }
         return false;
     }
