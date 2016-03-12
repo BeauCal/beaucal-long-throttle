@@ -13,9 +13,9 @@ env:
   global:
     - DB_ROOT="root"
     - DB_HOST="127.0.0.1"
-    - DB_NAME="beaucallongthrottle"
-    - DB_USER="beaucallongthrottle"
-    - DB_PASS="beaucallongthrottle"
+    - DB_NAME="beaucallt"
+    - DB_USER="beaucallt"
+    - DB_PASS="beaucallt"
 
 before_script:
  - mysql -u $DB_ROOT -e "CREATE DATABASE $DB_NAME;" || aborterror "Unable to create database."
