@@ -19,7 +19,7 @@ env:
     - DB_PASS=""
 
 before_script:
- - echo "extension = apc.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+ - phpenv config-add config/extensions.ini
  - mysql -uroot -e "CREATE DATABASE $DB_NAME;" || aborterror "Unable to create database."
  - mysql -uroot $DB_NAME < data/beaucal_throttle.sql || aborterror "Unable to import table."
  - mysql -uroot -e "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'$DB_HOST';"
