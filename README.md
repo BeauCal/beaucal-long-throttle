@@ -106,14 +106,9 @@ that won't work for some reason to do with how `apc_add()` works.
 Instead, handle the no-lock condition then try again next request.
 
 ```PHP
-// copy beaucallongthrottle.global.php to your config/autoload/
-$throttle = [
-// ...
-    'adapter_class' => 'BeaucalLongThrottle\Adapter\Apc', // was Adapter\Db
-// ...
-]
 
 // in controller
+$throttle = $this->getServiceLocator()->get('BeaucalLongThrottle\Adapter\Apc');
 $throttle->takeLock('not-too-long', new DateTimeUnit(1, 'minute')); // YES
 $throttle->takeLock('not-too-long', new DateTimeUnit(1, 'second')); // FALSE
 // ...
