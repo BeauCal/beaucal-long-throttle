@@ -1,7 +1,6 @@
-[![Build Status](https://travis-ci.org/BeauCal/beaucal-long-throttle.svg?branch=master)](https://travis-ci.org/BeauCal/beaucal-long-throttle)
-
 # BeaucalLongThrottle
 
+[![Build Status](https://travis-ci.org/BeauCal/beaucal-long-throttle.svg?branch=master)](https://travis-ci.org/BeauCal/beaucal-long-throttle)
 **Now with 100% code coverage.**
 
 Prevent an action for some amount of time.  Hours, day, months, years, anything.
