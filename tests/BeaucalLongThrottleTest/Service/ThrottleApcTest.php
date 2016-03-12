@@ -48,7 +48,9 @@ class ThrottleApcTest extends \PHPUnit_Framework_TestCase {
         $this->assertInstanceOf('BeaucalLongThrottle\Lock\Handle', $handle);
 
         $keyApc = "beaucal_throttle::{$key}";
-        $this->assertTrue(apc_fetch($keyApc));
+
+        $apc = new ApcExt;
+        $this->assertTrue($apc->fetch($keyApc));
         $this->assertFalse($this->throttle->takeLock($key, $ttl));
 
         /**
@@ -56,7 +58,7 @@ class ThrottleApcTest extends \PHPUnit_Framework_TestCase {
          * But for me apc_add and sleep don't play nice.  So, assume
          * apc_add works and just manually clear to get on with it.
          */
-        apc_delete($keyApc);
+        $apc->delete($keyApc);
 
         $handle = $this->throttle->takeLock($key, $ttl);
         $this->assertInstanceOf('BeaucalLongThrottle\Lock\Handle', $handle);
@@ -69,16 +71,17 @@ class ThrottleApcTest extends \PHPUnit_Framework_TestCase {
         );
         $this->assertInstanceOf('BeaucalLongThrottle\Lock\Handle', $handle);
         $keyApc = "beaucal_throttle::{$key}";
-        $this->assertTrue(apc_fetch($keyApc));
+        $apc = new ApcExt;
+        $this->assertTrue($apc->fetch($keyApc));
 
         $this->throttle->clearLock($handle);
-        $this->assertFalse(apc_fetch($keyApc));
+        $this->assertFalse($apc->fetch($keyApc));
 
         /**
          * And again.
          */
         $this->throttle->clearLock($handle);
-        $this->assertFalse(apc_fetch($keyApc));
+        $this->assertFalse($apc->fetch($keyApc));
     }
 
     public function testClearLockInvalid() {
