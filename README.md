@@ -111,6 +111,6 @@ $throttle = [
 $throttle->takeLock('not-too-long', new DateTimeUnit(1, 'minute')); // YES
 $throttle->takeLock('not-too-long', new DateTimeUnit(1, 'second')); // FALSE
 // ...
-// AN HOUR LATER
+// A MINUTE LATER
 $throttle->takeLock('not-too-long', new DateTimeUnit(5, 'minutes')); // YES
 ```
