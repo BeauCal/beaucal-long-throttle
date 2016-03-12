@@ -74,6 +74,7 @@ $regexCounts = [
 ];
 
 // in controller
+$throttle = $this->getServiceLocator()->get('BeaucalLongThrottle');
 $throttle->takeLock('do-stuff', new DateTimeUnit(1, 'day')); // YES
 $throttle->takeLock('do-stuff', new DateTimeUnit(1, 'day')); // YES
 $throttle->takeLock('do-stuff', new DateTimeUnit(1, 'day')); // YES
@@ -86,6 +87,7 @@ $throttle->takeLock('do-stuff', new DateTimeUnit(1, 'day')); // YES
 ### Clearing Locks
 
 ```PHP
+$throttle = $this->getServiceLocator()->get('BeaucalLongThrottle');
 $handle = $throttle->takeLock('year-end', new DateTimeUnit(1, 'year')); // YES
 $throttle->takeLock('year-end', new DateTimeUnit(1, 'year')); // FALSE
 if ($whoopsBackingOut) {
@@ -107,8 +109,15 @@ Instead, handle the no-lock condition then try again next request.
 
 ```PHP
 
+// copy beaucallongthrottle.global.php to your config/autoload/
+$throttle = [
+// ...
+    'adapter_class' => 'BeaucalLongThrottle\Adapter\Apc', // was Adapter\Db
+// ...
+]
+
 // in controller
-$throttle = $this->getServiceLocator()->get('BeaucalLongThrottle\Adapter\Apc');
+$throttle = $this->getServiceLocator()->get('BeaucalLongThrottle');
 $throttle->takeLock('not-too-long', new DateTimeUnit(1, 'minute')); // YES
 $throttle->takeLock('not-too-long', new DateTimeUnit(1, 'second')); // FALSE
 // ...
