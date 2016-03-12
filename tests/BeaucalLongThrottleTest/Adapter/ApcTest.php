@@ -81,7 +81,13 @@ class ApcTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testSetLockPast() {
-        $result = $this->apcAdapter->setLock('past', new DateTime('2000-01-01'));
+        $this->assertFalse(
+        $this->apcAdapter->setLock('past', new DateTime('2000-01-01'))
+        );
+        $this->assertTrue(
+        (bool) $this->apcAdapter->setLock('past',
+        (new DateTime())->modify('+1 hour'))
+        );
     }
 
     public function testApcExtensionWorking() {
