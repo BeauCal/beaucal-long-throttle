@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 if [ "$TRAVIS_PHP_VERSION" == "5.4"  ]; then
     exit 0
