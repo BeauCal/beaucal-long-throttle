@@ -101,6 +101,10 @@ For something more quick-n-dirty, use APC locking. This is adequate
 for short-term throttling with the usual caveats regarding APC persistence
 (e.g. some other part of your app might flush the entire cache, a PHP restart, out of memory).
 
+N.B. If `takeLock()` fails, don't try to `sleep()` it out;
+that won't work for some reason to do with how `apc_add()` works.
+Instead, handle the no-lock condition then try again next request.
+
 ```PHP
 // copy beaucallongthrottle.global.php to your config/autoload/
 $throttle = [
