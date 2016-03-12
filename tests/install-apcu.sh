@@ -9,8 +9,6 @@ else
 	printf "\n" | pecl install apcu-4.0.10
 fi
 
-printf "\n" | pecl install apcu-4.0.10
-
 # compile manually, because `pecl install apcu-beta` keep asking questions
 # APCU=4.0.2
 # get http://pecl.php.net/get/apcu-$APCU.tgz
