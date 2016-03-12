@@ -8,15 +8,35 @@ namespace BeaucalLongThrottle\Apc;
 class Apc {
 
     public function add($key, $var, $ttl) {
-        return apc_add($key, $var, $ttl);
+        $method = $this->apcMethod('add');
+        return $method($key, $var, $ttl);
     }
 
     public function fetch($key) {
-        return apc_fetch($key);
+        $method = $this->apcMethod('fetch');
+        return $method($key);
     }
 
     public function delete($key) {
-        return apc_delete($key);
+        $method = $this->apcMethod('delete');
+        return $method($key);
+    }
+
+    protected function apcMethod($method) {
+        static $map = [
+            'apc' => [
+                'add' => 'apc_add',
+                'fetch' => 'apc_fetch',
+                'delete' => 'apc_delete'
+            ],
+            'apcu' => [
+                'add' => 'apcu_add',
+                'fetch' => 'apcu_fetch',
+                'delete' => 'apcu_delete'
+            ],
+        ];
+        $ext = extension_loaded('apcu') ? 'apcu' : 'apc';
+        return $map[$ext][$method];
     }
 
 }
