@@ -1,9 +1,0 @@
-<?php
-
-return [
-    'db' => [
-        'username' => 'beaucal_test',
-        'password' => '<MANUAL CONFIG>',
-        'dsn' => 'mysql:dbname=<MANUAL CONFIG>;host=localhost;charset=utf8'
-    ]
-];
