@@ -3,6 +3,12 @@
 # this is helpful to compile extension
 sudo apt-get install autoconf
 
+if [ "$TRAVIS_PHP_VERSION" == "7.0" ]; then
+    printf "\n" | pecl install apcu
+else
+	printf "\n" | pecl install apcu-4.0.10
+fi
+
 printf "\n" | pecl install apcu-4.0.10
 
 # compile manually, because `pecl install apcu-beta` keep asking questions
